@@ -1,19 +1,12 @@
 import { Router } from 'express';
 
+import UserController from './app/controllers/UserController';
+import SessionController from './app/controllers/SessionController';
 const routes = new Router();
 
-const mid = (req, res, next ) =>{
-    console.log('Ola mundo', next);
-    next();
-};
-routes.use(mid);
-routes.get('/', (req, res) =>{
-    return res.send('Ola mundo1');
-});
-routes.get('/ola', (req, res) =>{
-    return res.send('Ola mundo2');
-});
-
+routes.post('/signup', UserController.store);
+routes.post('/signin', SessionController.store);
+routes.post('/user/update', UserController.update);
 
 
 export default routes;
