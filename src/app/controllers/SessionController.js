@@ -1,6 +1,7 @@
 import * as Yup from 'yup';
 import jwt from 'jsonwebtoken';
 import User from '../models/User';
+import File from '../models/File';
 import authConfig from '../../config/auth';
 
 class SessionController {
@@ -21,7 +22,14 @@ class SessionController {
         const user = await User.findOne({
            where: {
                email,
-           } 
+           },
+           include: [
+                {
+                    model: File,
+                    as: 'avatar',
+                    attributes: ['id','name','path'],
+                }
+           ],
         });
 
         if(!user){
@@ -35,7 +43,7 @@ class SessionController {
             });
         }
 
-        const { id, name } = user;
+        const { id, name, avatar } = user;
 
 
         return res.json({ 
@@ -43,6 +51,7 @@ class SessionController {
                     id,
                     email,
                     name,
+                    avatar,
             },
             token : jwt.sign({ id }, authConfig.secret, {
                 expiresIn: authConfig.expiresIn,
