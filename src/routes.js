@@ -18,4 +18,5 @@ routes.post('/user/update', UserController.update);
 routes.post('/user/avatar', upload.single('file'), FileController.store);
 routes.post('/meet/banner', upload.single('file'), FileController.store);
 routes.post('/meet/store', MeetController.store);
+routes.get('/meet/index', MeetController.index);
 export default routes; 
