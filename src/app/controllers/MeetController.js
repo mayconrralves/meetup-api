@@ -20,7 +20,7 @@ class MeetController {
             return res.status(400).json({error: 'This date has passed'});
         }
         const { localization, description, date, banner_id } = req.body;
-        
+
         const user_id = req.userId;
         const result = await Meetups.create({
             user_id,
@@ -34,6 +34,7 @@ class MeetController {
     }
 
     async update(req, res) {
+        
         return res.json({});
     }
 
