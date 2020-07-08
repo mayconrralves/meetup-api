@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import {parseISO, isDate, isBefore} from 'date-fns';
+import {parseISO, isBefore} from 'date-fns';
 import Meetups from '../models/Meetups';
 import File from '../models/File';
 
@@ -44,7 +44,14 @@ class MeetController {
 
     async index(req, res) {
         const result = await Meetups.findAll({
-            where: { user_id: req.userId }
+            where: { user_id: req.userId },
+            include: [
+                {
+                    model: File,
+                    as: 'banner',
+                    attributes: ['id', 'name', 'path', 'url'],
+                }
+            ]
         });
         return res.json(result);
     }
