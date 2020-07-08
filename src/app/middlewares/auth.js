@@ -14,6 +14,7 @@ export default async (req, res, next) => {
 
     try {
         const decoded = await promisify(jwt.verify)(token, authConfig.secret);
+        //User id is global now
         req.userId = decoded.id;
         next();
     }catch(error) {

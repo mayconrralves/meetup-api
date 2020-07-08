@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import {parseISO, isDate, isBefore} from 'date-fns';
-import Meet from '../models/Meet';
+import Meetups from '../models/Meetups';
 import File from '../models/File';
 
 
@@ -11,6 +11,7 @@ class MeetController {
             localization: Yup.string().required(),
             description: Yup.string().required(),
             date: Yup.string().matches(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}-\d{2}:\d{2}$/).required(),
+            banner_id: Yup.string().required(),
         });
         if(!(await schema.isValid(req.body))){
             return res.status(400).json({error: 'Validations Errors'});
@@ -18,8 +19,18 @@ class MeetController {
         if(isBefore(parseISO(req.body.date), new Date())) {
             return res.status(400).json({error: 'This date has passed'});
         }
+        const { localization, description, date, banner_id } = req.body;
+        
+        const user_id = req.userId;
+        const result = await Meetups.create({
+            user_id,
+            localization,
+            description,
+            date,
+            banner_id
+        });
 
-        return res.json(req.body);
+        return res.json(result);
     }
 
     async update(req, res) {

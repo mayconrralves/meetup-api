@@ -8,7 +8,7 @@ class UserController{
             name: Yup.string().required(),
             email: Yup.string().email().required(),
             password: Yup.string().min(6).required(),
-            confirmPassword: Yup.string().required().oneOf([Yup.ref('password')])
+            confirmPassword: Yup.string().required().oneOf([Yup.ref('password')]),
         });
 
         if(!await (schema.isValid(req.body))){
@@ -26,12 +26,12 @@ class UserController{
             });
         }
 
-        const { name, email, password} = await User.create(req.body);
+        const { name, email, password, banner_id} = await User.create(req.body);
 
         return res.json({
             name,
             email,
-            password
+            password,
         });
     }
 
@@ -54,9 +54,9 @@ class UserController{
             });
         }
 
-        const {email, oldPassword } = req.body;
+        const { email, oldPassword } = req.body;
         const user = await User.findByPk(req.userId);
-        console.log(user);
+
         if(email && email !== user.email) {
             const userExists = await User.findOne({where: { email }});
 
