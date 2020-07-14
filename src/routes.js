@@ -7,6 +7,7 @@ import multer from 'multer';
 import multerConfig from './config/multer';
 import authAuthorization from './app/middlewares/auth';
 import MeetController from './app/controllers/MeetController';
+import UserEnrollmentController from './app/controllers/UserEnrollmentController';
 
 const routes = new Router();
 const upload = multer(multerConfig);
@@ -19,4 +20,7 @@ routes.post('/user/avatar', upload.single('file'), FileController.store);
 routes.post('/meet/banner', upload.single('file'), FileController.store);
 routes.post('/meet/store', MeetController.store);
 routes.get('/meet/index', MeetController.index);
+routes.put('/meet/update', MeetController.update);
+routes.delete('/meet/delete', MeetController.delete);
+routes.post('/meet/enrollment', UserEnrollmentController.store);
 export default routes; 

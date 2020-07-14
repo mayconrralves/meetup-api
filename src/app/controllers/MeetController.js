@@ -3,6 +3,7 @@ import {parseISO, isBefore} from 'date-fns';
 import Meetups from '../models/Meetups';
 import File from '../models/File';
 
+const regex_date = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}-\d{2}:\d{2}$/;
 
 class MeetController {
     
@@ -10,7 +11,7 @@ class MeetController {
         const schema = Yup.object().shape({
             localization: Yup.string().required(),
             description: Yup.string().required(),
-            date: Yup.string().matches(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}-\d{2}:\d{2}$/).required(),
+            date: Yup.string().matches(regex_date).required(),
             banner_id: Yup.string().required(),
         });
         if(!(await schema.isValid(req.body))){
@@ -34,12 +35,46 @@ class MeetController {
     }
 
     async update(req, res) {
+        const schema = Yup.object().shape({
+            localization: Yup.string(),
+            description: Yup.string(),
+            date: Yup.string().matches(regex_date),
+            banner_id: Yup.string(),
+        });
+
+        if(! (await schema.isValid(req.body))){
+            return res.status(400).json({
+                error: 'Validation fails'
+            });
+        }
+
+        if(isBefore(parseISO(req.body.date), new Date())){
+            return res.status(400).json({
+                error: 'This date has passed'
+            });
+        }
+        const { id } = req.query;
         
-        return res.json({});
+        const meet = await Meetups.findByPk(id);
+
+        await meet.update(req.body);
+
+        return res.json(meet);
     }
 
     async delete(req, res) {
-        return res.json({});
+        const { id } = req.query;
+
+        const meet = await Meetups.findByPk(id);
+
+        if(!meet){
+            return res.status(400).json({
+                error: 'Meetup no exists'
+            });
+        }
+        await meet.destroy();
+
+        return res.json(meet);
     }
 
     async index(req, res) {
