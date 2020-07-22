@@ -7,6 +7,7 @@ import multer from 'multer';
 import multerConfig from './config/multer';
 import authAuthorization from './app/middlewares/auth';
 import MeetController from './app/controllers/MeetController';
+import NotificationController from './app/controllers/NotificationController';
 import UserEnrollmentController from './app/controllers/UserEnrollmentController';
 
 const routes = new Router();
@@ -22,5 +23,9 @@ routes.post('/meet/store', MeetController.store);
 routes.get('/meet/index', MeetController.index);
 routes.put('/meet/update', MeetController.update);
 routes.delete('/meet/delete', MeetController.delete);
+routes.get('/meetups', UserEnrollmentController.index);
 routes.post('/meet/enrollment', UserEnrollmentController.store);
+routes.put('/meet/notifications/update', NotificationController.update);
+routes.get('/meet/notifications/', NotificationController.index);
+
 export default routes; 

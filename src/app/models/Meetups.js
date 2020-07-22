@@ -1,5 +1,5 @@
 import Sequelize, { Model } from 'sequelize';
-
+import { format } from 'date-fns';
 
 class Meetups extends Model{
     static init(sequelize){
