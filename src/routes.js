@@ -9,6 +9,7 @@ import authAuthorization from './app/middlewares/auth';
 import MeetController from './app/controllers/MeetController';
 import NotificationController from './app/controllers/NotificationController';
 import UserEnrollmentController from './app/controllers/UserEnrollmentController';
+import ScheduleController from './app/controllers/ScheduleController';
 
 const routes = new Router();
 const upload = multer(multerConfig);
@@ -27,5 +28,6 @@ routes.get('/meetups', UserEnrollmentController.index);
 routes.post('/meet/enrollment', UserEnrollmentController.store);
 routes.put('/meet/notifications/update', NotificationController.update);
 routes.get('/meet/notifications/', NotificationController.index);
+routes.get('/user/meets', ScheduleController.index);
 
 export default routes; 
