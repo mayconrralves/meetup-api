@@ -17,6 +17,7 @@ routes.post('/signup', UserController.store);
 routes.post('/signin', SessionController.store);
 
 routes.use(authAuthorization);
+routes.get('/', (req,res)=> { return res.send('Ok')});
 routes.post('/user/update', UserController.update);
 routes.post('/user/avatar', upload.single('file'), FileController.store);
 routes.post('/meet/banner', upload.single('file'), FileController.store);
