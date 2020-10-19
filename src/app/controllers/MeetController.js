@@ -23,6 +23,14 @@ class MeetController {
         const { localization, description, date, banner_id } = req.body;
 
         const user_id = req.userId;
+
+        const file = await File.findByPk(banner_id);
+        
+        if(!file){
+            return res.status(400).json({
+                error: "Banner don't exist in database",
+            });
+        }
         const result = await Meetups.create({
             user_id,
             localization,
