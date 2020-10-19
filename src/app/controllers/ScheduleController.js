@@ -6,9 +6,8 @@ import User from '../models/User';
 
 class ScheduleController{
 	async index(req, res){
-		console.log(req.userId);
 		const meets = await Meetups.findAll({
-			where: { user_id: req.userId, date: where(fn('date', col('date')), '>', new Date()) },
+			where: { user_id: req.userId, date: where(fn('date', col('date')), '>=', new Date()) },
 			order: ['date'],
 			include: [
 				{
