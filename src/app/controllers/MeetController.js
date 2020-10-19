@@ -3,7 +3,7 @@ import {parseISO, isBefore} from 'date-fns';
 import Meetups from '../models/Meetups';
 import File from '../models/File';
 
-const regex_date = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}-\d{2}:\d{2}$/;
+const regex_date = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}-|\+\d{2}:\d{2}$/;
 
 class MeetController {
     

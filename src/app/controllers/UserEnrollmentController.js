@@ -83,28 +83,22 @@ class UserEnrollmentController{
 		}
 		const {date, page} = req.query;
 		const limitByPage = 20;
-
-		const meet = await Meetups.findAll({
-			attributes: ['id', 'localization','description', 'date'],
-			where: where(fn('date', col('date')),'=', date),
+		const userMeet = await UserMeet.findAll({
+			where: { 'fk_users_id': req.userId },
 			include: [
 				{
-					model: User,
-					as: 'user_meet',
-					attributes: ['id', 'name','email'],
-					include: [
-						{
-							model: File,
-							as: 'avatar',
-							attributes: ['id','name','path','url']
-						}
-					]
+					model: Meetups,
+					as: 'fk_meets',
+					attributes: ['id', 'localization','description', 'date'],
+					where:{'date': where(fn('date', col('date')),'>=', date)},
+					order: ['date', 'DESC'],
 				}
 			],
 			limit: limitByPage,
 			offset: (page-1)*limitByPage,
+			
 		});
-		return res.json(meet);
+		return res.json(userMeet);
 	}
 }
 
