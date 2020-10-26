@@ -7,8 +7,9 @@ import File from '../models/File';
 import Mail from '../../lib/Mail';
 import NotificationSchema from '../schemas/Notification';
 
-class UserEnrollmentController{
+class MeetEnrollmentController{
 	async store(req, res) {
+		
 		const fk_users_id = req.userId;
 		const fk_meets_id = req.query.id;
 		
@@ -78,6 +79,7 @@ class UserEnrollmentController{
 	}
 
 	async index(req, res) {
+		console.log('csrfToken', req.csrfToken());
 		if(!req.query.page){
 			return res.status(400).json({error: 'Must to have a page number'});
 		}
@@ -102,5 +104,5 @@ class UserEnrollmentController{
 	}
 }
 
-export default new UserEnrollmentController();
+export default new MeetEnrollmentController();
 

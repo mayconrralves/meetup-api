@@ -10,8 +10,10 @@
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
+    "csurf": "^1.11.0",
     "date-fns": "^2.14.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
@@ -22,6 +24,7 @@
     "nodemailer": "^6.4.10",
     "pg": "^8.2.1",
     "pg-hstore": "^2.3.3",
+    "queue": "^6.0.1",
     "redis": "^3.0.2",
     "sequelize": "^6.2.3",
     "youch": "^2.1.1",

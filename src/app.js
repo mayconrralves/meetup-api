@@ -4,7 +4,11 @@ import routes from './routes';
 import path from 'path';
 import cors from 'cors';
 import Youch from 'youch';
+import cookieParser from 'cookie-parser';
+
+
 import './database';
+
 
 class App {
     constructor(){
@@ -15,8 +19,11 @@ class App {
     }
 
     middlewares() {
+        this.server.use(cors());
+        this.server.use(cookieParser());
         this.server.use(express.json());
         this.server.use('/user/avatar', express.static(path.resolve(__dirname, '..', 'storage', 'uploads')));
+
     }
 
     routes() {
