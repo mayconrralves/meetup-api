@@ -4,8 +4,10 @@ import UserMeet from '../models/UserMeet';
 import User from '../models/User';
 import Meetups from '../models/Meetups';
 import File from '../models/File';
-import Mail from '../../lib/Mail';
 import NotificationSchema from '../schemas/Notification';
+import ConfirmationMail from '../jobs/ConfirmationMail';
+import Queue from '../../lib/Queue';
+
 
 class MeetEnrollmentController{
 	async store(req, res) {
@@ -64,11 +66,10 @@ class MeetEnrollmentController{
 		});
 		//Send email
 		const text = `Você tem uma nova inscrição do usuário ${user.name} com email ${user.email}`;
-		await Mail.sendMail({
-			to: `${userOriginMeet.name}<${userOriginMeet.email}>`,
-			subject: 'Inscrição de Usuário',
-			text,
-		});
+		const subject = 'Inscrição de Usuário';
+		await Queue.add(ConfirmationMail.key, {
+			subject, text, userOriginMeet
+		})
 
 		await NotificationSchema.create({
 			content: text,
@@ -77,9 +78,11 @@ class MeetEnrollmentController{
 
 		return res.json(result);
 	}
-
+	async remove(req, res){
+		const { id } = res.query;
+		//if(id)
+	}
 	async index(req, res) {
-		console.log('csrfToken', req.csrfToken());
 		if(!req.query.page){
 			return res.status(400).json({error: 'Must to have a page number'});
 		}
@@ -87,6 +90,7 @@ class MeetEnrollmentController{
 		const limitByPage = 20;
 		const userMeet = await UserMeet.findAll({
 			where: { 'fk_users_id': req.userId },
+			attributes: ['id'],
 			include: [
 				{
 					model: Meetups,

@@ -33,6 +33,7 @@ routes.delete('/meet/delete', MeetController.delete);
 routes.get('/meet/enrollment/index', MeetEnrollmentController.index);
 routes.post('/meet/enrollment', MeetEnrollmentController.store);
 routes.get('/meet/notifications', NotificationController.index);
+routes.put('/meet/notifications/update', NotificationController.update);
 routes.get('/user/meets', ScheduleController.index);
 
 export default routes; 

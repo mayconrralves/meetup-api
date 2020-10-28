@@ -8,6 +8,9 @@ class NotificationController{
 		});
 		return res.json(notifications);
 	}
+	async update(req, res) {
+		return res.json({Prog: 'Ok'})
+	}
 
 }
 
