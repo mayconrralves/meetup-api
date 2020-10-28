@@ -78,9 +78,47 @@ class MeetEnrollmentController{
 
 		return res.json(result);
 	}
-	async remove(req, res){
-		const { id } = res.query;
-		//if(id)
+	async update(req, res){
+		const { id } = req.query;
+
+		const meetEnrollment = await UserMeet.findByPk(id, {
+			include: [
+				{
+					model: User,
+					as: 'fk_users',
+					attributes: ['id','name']
+				},
+				{
+					model: Meetups,
+					as: 'fk_meets',
+					attributes: ['id','user_id'],
+					include: [
+						{
+							model: User,
+							as: 'user_meet',
+							attributes: ['name','email']
+						}
+					]
+				},
+			]
+		});
+		if(!meetEnrollment) {
+			return res.status(400).json({
+				error: 'Enrollment not exit',
+			});
+		}
+		const user = await User.findByPk(req.userId);
+		const text = `Você tem um novo cancelamento do usuário ${user.name} com email ${user.email}`;
+		const subject = 'Cancelamento de Inscrição';
+		await meetEnrollment.destroy();
+		await NotificationSchema.create({
+			content: text,
+			user: meetEnrollment.fk_meets.id,
+		});
+		await Queue.add(ConfirmationMail.key, {
+			subject, text, userOriginMeet: meetEnrollment.fk_meets.user_meet
+		});
+		return res.json(meetEnrollment);
 	}
 	async index(req, res) {
 		if(!req.query.page){

@@ -9,7 +9,13 @@ class NotificationController{
 		return res.json(notifications);
 	}
 	async update(req, res) {
-		return res.json({Prog: 'Ok'})
+		const result = await Notification.update({
+			_id: req.query.id,
+		},
+		{
+			read: true,
+		});
+		return res.json(result);
 	}
 
 }

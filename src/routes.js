@@ -31,6 +31,7 @@ routes.get('/meet/index', MeetController.index);
 routes.put('/meet/update', MeetController.update);
 routes.delete('/meet/delete', MeetController.delete);
 routes.get('/meet/enrollment/index', MeetEnrollmentController.index);
+routes.put('/meet/enrollment/update', MeetEnrollmentController.update);
 routes.post('/meet/enrollment', MeetEnrollmentController.store);
 routes.get('/meet/notifications', NotificationController.index);
 routes.put('/meet/notifications/update', NotificationController.update);
