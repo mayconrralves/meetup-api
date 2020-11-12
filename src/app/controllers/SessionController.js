@@ -4,6 +4,7 @@ import User from '../models/User';
 import File from '../models/File';
 import authConfig from '../../config/auth';
 
+ let tok = null;
 class SessionController {
     async store(req, res) {
         const schema = Yup.object().shape({
@@ -52,6 +53,7 @@ class SessionController {
         res.cookie('token', token, {
             httpOnly: true,
         });
+        tok = token;
         return res.json({ 
            user: {
                     id,
@@ -60,6 +62,16 @@ class SessionController {
                     avatar,
             },
             token,
+        });
+    }
+
+    async delete(req, res) {
+        res.cookie('token', null, {
+            
+
+        });
+        return res.status(200).json({
+            msg: 'Session deleted',
         });
     }
 }
