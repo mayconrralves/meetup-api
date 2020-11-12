@@ -1,6 +1,5 @@
 import { Router } from 'express';
 
-
 import UserController from './app/controllers/UserController';
 import SessionController from './app/controllers/SessionController';
 import FileController from './app/controllers/FileController';
@@ -29,6 +28,7 @@ routes.get('/getcsrf', CSRFController.index);
 routes.get('/logout', SessionController.delete);
 routes.post('/user/update', userUpdateValidation, UserController.update);
 routes.post('/user/avatar', upload.single('file'), FileController.store);
+routes.get('/user/meets', ScheduleController.index);
 routes.post('/meet/banner', upload.single('file'), FileController.store);
 routes.post('/meet/store',meetStoreValidation, MeetController.store);
 routes.get('/meet/index', MeetController.index);
@@ -39,6 +39,6 @@ routes.put('/meet/enrollment/update', MeetEnrollmentController.update);
 routes.post('/meet/enrollment', MeetEnrollmentController.store);
 routes.get('/meet/notifications', NotificationController.index);
 routes.put('/meet/notifications/update', NotificationController.update);
-routes.get('/user/meets', ScheduleController.index);
+
 
 export default routes; 
