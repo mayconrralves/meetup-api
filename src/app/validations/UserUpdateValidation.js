@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import 'dotenv/config';
 
 
  export default async ( req, res, next ) => {
@@ -20,7 +21,10 @@ import * as Yup from 'yup';
  			return next();
 	 }
 	 catch(err){
-	 		return res.status(400).json({error: 'Validations Errors', messages: err.inner}); 
+	 	if(process.env.NODE_ENV === 'developement'){
+	 		console.log(err);
+	 	}
+	 	return res.status(400).json({error: 'Validations Errors'}); 
 	 	}
  	
  }

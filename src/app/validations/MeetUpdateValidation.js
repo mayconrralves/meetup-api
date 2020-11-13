@@ -1,6 +1,7 @@
 import * as Yup from 'yup';
 
 import regexDate from '../../config/regexDate';
+import 'dotenv/config';
 
 export default async (req, res, next) => {
 	try {
@@ -15,9 +16,11 @@ export default async (req, res, next) => {
         next();
 
 	}catch(err) {
+        if(process.env.NODE_ENV === 'developement'){
+            console.log(err);
+        }
 		return res.status(400).json({
-                error: 'Validation fails', 
-                messages: err.inner
+                error: 'Validation fails',
            });
 	}
 	

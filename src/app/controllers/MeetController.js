@@ -7,7 +7,6 @@ import File from '../models/File';
 class MeetController {
     
     async store(req, res) {
-
         if(isBefore(parseISO(req.body.date), new Date())) {
             return res.status(400).json({error: 'This date has passed'});
         }
