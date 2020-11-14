@@ -67,9 +67,16 @@ class MeetEnrollmentController{
 		//Send email
 		const text = `Você tem uma nova inscrição do usuário ${user.name} com email ${user.email}`;
 		const subject = 'Inscrição de Usuário';
-		await Queue.add(ConfirmationMail.key, {
-			subject, text, userOriginMeet
-		})
+		try {
+				await Queue.add(ConfirmationMail.key, {
+					subject, text, userOriginMeet
+			});
+		}catch(Error){
+			if(process.env.NODE_ENV === 'developement'){
+	 			console.log("Queue isn't on active");
+	 		}
+		}
+		
 
 		await NotificationSchema.create({
 			content: text,
@@ -80,8 +87,10 @@ class MeetEnrollmentController{
 	}
 	async update(req, res){
 		const { id } = req.query;
-
-		const meetEnrollment = await UserMeet.findByPk(id, {
+		console.log(id)
+		const meetEnrollment = await UserMeet.findOne({
+			where: { id },
+			attributes: ['id'],
 			include: [
 				{
 					model: User,
@@ -102,22 +111,33 @@ class MeetEnrollmentController{
 				},
 			]
 		});
+		
+		console.log(meetEnrollment)
 		if(!meetEnrollment) {
 			return res.status(400).json({
 				error: 'Enrollment not exit',
 			});
 		}
+		console.log(req.userId);
 		const user = await User.findByPk(req.userId);
+		console.log(user);
 		const text = `Você tem um novo cancelamento do usuário ${user.name} com email ${user.email}`;
 		const subject = 'Cancelamento de Inscrição';
-		await meetEnrollment.destroy();
+		//await meetEnrollment.destroy();
 		await NotificationSchema.create({
 			content: text,
 			user: meetEnrollment.fk_meets.id,
 		});
-		await Queue.add(ConfirmationMail.key, {
+		try {
+			await Queue.add(ConfirmationMail.key, {
 			subject, text, userOriginMeet: meetEnrollment.fk_meets.user_meet
 		});
+		}catch(Error){
+			if(process.env.NODE_ENV === 'developement'){
+	 			console.log("Queue isn't on active");
+	 		}
+		}
+		
 		return res.json(meetEnrollment);
 	}
 	async index(req, res) {
