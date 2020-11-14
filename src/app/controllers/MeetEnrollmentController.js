@@ -123,7 +123,7 @@ class MeetEnrollmentController{
 		console.log(user);
 		const text = `Você tem um novo cancelamento do usuário ${user.name} com email ${user.email}`;
 		const subject = 'Cancelamento de Inscrição';
-		//await meetEnrollment.destroy();
+		await meetEnrollment.destroy();
 		await NotificationSchema.create({
 			content: text,
 			user: meetEnrollment.fk_meets.id,
