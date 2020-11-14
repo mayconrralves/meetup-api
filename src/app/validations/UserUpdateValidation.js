@@ -3,8 +3,7 @@ import 'dotenv/config';
 
 
  export default async ( req, res, next ) => {
- 	try {
- 			 const schema = Yup.object().shape({
+ 		const schema = Yup.object().shape({
 	            name: Yup.string(),
 	            email: Yup.string().email(),
 	            oldPassword: Yup.string().min(6),
@@ -14,8 +13,8 @@ import 'dotenv/config';
 	            confirmPassword: Yup.string().when('password',(password, field)=> (
 	                password ? field.required().oneOf([Yup.ref('password')]): field
 	            ))
-        	});
-
+        });
+ 	try {
  			await schema.validate(req.body, { abortEarly: false });
 
  			return next();

@@ -3,15 +3,15 @@ import regexDate from '../../config/regexDate';
 import 'dotenv/config';
 
  export default async ( req, res, next ) => {
- 	try {
- 			const schema = Yup.object().shape({
-	            localization: Yup.string().required(),
-	            description: Yup.string().required(),
-	            date: Yup.string().matches(regexDate).required(),
-	            banner_id: Yup.string().required(),
-        	});
+ 	const schema = Yup.object().shape({
+        localization: Yup.string().required(),
+        description: Yup.string().required(),
+        date: Yup.string().matches(regexDate).required(),
+        banner_id: Yup.string().required(),
+    });
+     try {
  			await schema.validate(req.body, { abortEarly: false });
- 			return next();
+ 			next();
 	 }
 	 catch(err){
 	 	if(process.env.NODE_ENV === 'developement'){

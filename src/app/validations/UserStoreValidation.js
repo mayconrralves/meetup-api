@@ -3,18 +3,17 @@ import 'dotenv/config';
 
 
  export default async ( req, res, next ) => {
+	const schema = Yup.object().shape({
+    	name: Yup.string().required(),
+    	email: Yup.string().email().required(),
+    	password: Yup.string().min(6).required(),
+    	confirmPassword: Yup.string().required().oneOf([Yup.ref('password')]),
+	});
+
  	try {
- 			const schema = Yup.object().shape({
-	            name: Yup.string().required(),
-	            email: Yup.string().email().required(),
-	            password: Yup.string().min(6).required(),
-	            confirmPassword: Yup.string().required().oneOf([Yup.ref('password')]),
-        	});
+ 		await schema.validate(req.body, { abortEarly: false });
 
-
- 			await schema.validate(req.body, { abortEarly: false });
-
- 			return next();
+ 		return next();
 	 }
 	 catch(err){
 	 	if(process.env.NODE_ENV === 'developement'){
