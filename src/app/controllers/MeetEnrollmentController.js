@@ -7,11 +7,16 @@ import File from '../models/File';
 import NotificationSchema from '../schemas/Notification';
 import ConfirmationMail from '../jobs/ConfirmationMail';
 import Queue from '../../lib/Queue';
+import 'dotenv/config';
 
 
 class MeetEnrollmentController{
 	async store(req, res) {
-		
+		if(!req.query.id){
+			return res.status(400).json({
+				error: "Meetup's id is required",
+			});
+		}
 		const fk_users_id = req.userId;
 		const fk_meets_id = req.query.id;
 		
@@ -25,7 +30,7 @@ class MeetEnrollmentController{
 			return res.status(400).json({error: ' You created this meet'})
 		}
 
-		//if already has aenrollment in meet 
+		//if already has a enrollment in meet 
 		const userMeet = await UserMeet.findOne({
 			where: {
 				fk_meets_id,
@@ -65,7 +70,7 @@ class MeetEnrollmentController{
 			fk_users_id,
 		});
 		//Send email
-		const text = `Você tem uma nova inscrição do usuário ${user.name} com email ${user.email}`;
+		const text = `Você tem uma nova inscrição do usuário ${user.name} com email ${user.email} no meetup de descrição ${meet.description}`;
 		const subject = 'Inscrição de Usuário';
 		try {
 				await Queue.add(ConfirmationMail.key, {
@@ -86,47 +91,49 @@ class MeetEnrollmentController{
 		return res.json(result);
 	}
 	async update(req, res){
-		const { id } = req.query;
-		console.log(id)
+		const fk_users_id = req.userId;
+		if(!req.query.id){
+			return res.status(400).json({
+				error: "Meetup's id is required",
+			});
+		}
+		const fk_meets_id = req.query.id;
 		const meetEnrollment = await UserMeet.findOne({
-			where: { id },
-			attributes: ['id'],
+			where: { fk_meets_id, fk_users_id},
 			include: [
-				{
-					model: User,
-					as: 'fk_users',
-					attributes: ['id','name']
-				},
-				{
-					model: Meetups,
-					as: 'fk_meets',
-					attributes: ['id','user_id'],
-					include: [
-						{
-							model: User,
-							as: 'user_meet',
-							attributes: ['name','email']
-						}
-					]
-				},
-			]
+			{
+				model: User,
+				as: 'fk_users',
+				attributes: ['id','name', 'email']
+			},
+			{
+				model: Meetups,
+				as: 'fk_meets',
+				attributes: ['id','user_id', 'description'],
+				include: [
+					{
+						model: User,
+						as: 'user_meet',
+						attributes: ['name','email']
+					}
+				]
+			},
+		]
+
 		});
-		
-		console.log(meetEnrollment)
 		if(!meetEnrollment) {
 			return res.status(400).json({
 				error: 'Enrollment not exit',
 			});
 		}
-		console.log(req.userId);
-		const user = await User.findByPk(req.userId);
-		console.log(user);
-		const text = `Você tem um novo cancelamento do usuário ${user.name} com email ${user.email}`;
+		const user = await User.findByPk(fk_users_id);
+		
+		const text = `Você tem um novo cancelamento do usuário ${user.name} com email ${user.email} no meetup de descrição ${meetEnrollment.fk_meets.description}`;
 		const subject = 'Cancelamento de Inscrição';
 		await meetEnrollment.destroy();
 		await NotificationSchema.create({
 			content: text,
-			user: meetEnrollment.fk_meets.id,
+			user: meetEnrollment.fk_meets.user_id,
 		});
 		try {
 			await Queue.add(ConfirmationMail.key, {
@@ -144,11 +151,14 @@ class MeetEnrollmentController{
 		if(!req.query.page){
 			return res.status(400).json({error: 'Must to have a page number'});
 		}
+		if(!req.query.date){
+			return res.status(400).json({error: 'Must to have a date'})
+		}
 		const {date, page} = req.query;
 		const limitByPage = 20;
 		const userMeet = await UserMeet.findAll({
 			where: { 'fk_users_id': req.userId },
-			attributes: ['id'],
+			attributes: [ 'fk_meets_id' ],
 			include: [
 				{
 					model: Meetups,
