@@ -12,11 +12,7 @@ import 'dotenv/config';
 
 class MeetEnrollmentController{
 	async store(req, res) {
-		if(!req.query.id){
-			return res.status(400).json({
-				error: "Meetup's id is required",
-			});
-		}
+		
 		const fk_users_id = req.userId;
 		const fk_meets_id = req.query.id;
 		

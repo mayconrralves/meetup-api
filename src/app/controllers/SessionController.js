@@ -3,21 +3,9 @@ import jwt from 'jsonwebtoken';
 import User from '../models/User';
 import File from '../models/File';
 import authConfig from '../../config/auth';
-
- let tok = null;
 class SessionController {
     async store(req, res) {
-        const schema = Yup.object().shape({
-            email: Yup.string().email().required(),
-            password: Yup.string().required(),
-        });
-
-        if(!(await schema.isValid(req.body))){
-            return res.status(400).json({
-                error: 'Validation Fails'
-            });
-        }
-
+       
         const { email, password} = req.body;
 
         const user = await User.findOne({
@@ -47,13 +35,15 @@ class SessionController {
         const { id, name, avatar } = user;
 
         const token = jwt.sign({ id }, authConfig.secret, {
-                expiresIn: authConfig.expiresIn,
+                expiresIn: authConfig.expiresIn + 'd',
             });
-
+        const expires = new Date();
+        expires.setDate(expires.getDate()+parseInt(authConfig.expiresIn));
         res.cookie('token', token, {
             httpOnly: true,
+            expires
+
         });
-        tok = token;
         return res.json({ 
            user: {
                     id,
@@ -66,9 +56,10 @@ class SessionController {
     }
 
     async delete(req, res) {
+        const expires = new Date();
+        expires.setDate(expires.getDate()-1);
         res.cookie('token', null, {
-            
-
+             expires,
         });
         return res.status(200).json({
             msg: 'Session deleted',

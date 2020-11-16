@@ -51,9 +51,16 @@ class MeetController {
                 error: 'This date has passed'
             });
         }
+
         const { id } = req.query;
         
         const meet = await Meetups.findByPk(id);
+
+        if(!meet){
+            return res.status(400).json({
+                error: "Meetup no exists",
+            });
+        }
 
         await meet.update(req.body);
 
