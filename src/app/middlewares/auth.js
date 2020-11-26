@@ -4,7 +4,9 @@ import { promisify } from 'util';
 
 
 export default async (req, res, next) => {
-    const authHeader = req.headers.authorization;
+    //const authHeader =  req.headers.authorization;
+      /*If csrf is enabled, we use req.cookies.token*/
+    const authHeader = req.cookies.token;
     if(!authHeader) {
         return res.status(401).json({error: 'Token not Provided'});
     }

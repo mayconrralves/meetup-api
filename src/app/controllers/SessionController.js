@@ -5,7 +5,6 @@ import File from '../models/File';
 import authConfig from '../../config/auth';
 class SessionController {
     async store(req, res) {
-       
         const { email, password} = req.body;
 
         const user = await User.findOne({
