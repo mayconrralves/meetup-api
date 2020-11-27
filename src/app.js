@@ -19,7 +19,13 @@ class App {
     }
 
     middlewares() {
-        this.server.use(cors());
+        this.server.use(cors(
+            {
+                origin: [process.env.ORIGIN], 
+                optionsSuccessStatus: 200,
+                credentials: true
+            }
+        ));
         this.server.use(cookieParser());
         this.server.use(express.json());
         this.server.use('/user/avatar', express.static(path.resolve(__dirname, '..', 'storage', 'uploads')));
