@@ -60,6 +60,9 @@ class SessionController {
         res.cookie('token', null, {
              expires,
         });
+        res.cookie('_csrf', null, {
+            expires,
+        })
         return res.status(200).json({
             msg: 'Session deleted',
         });
