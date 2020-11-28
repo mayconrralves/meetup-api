@@ -40,7 +40,9 @@ class SessionController {
         expires.setDate(expires.getDate()+parseInt(authConfig.expiresIn));
         res.cookie('token', token, {
             httpOnly: true,
-            expires
+            expires,
+            //sameSite: 'none',
+            //secure: true,
 
         });
         return res.json({ 
