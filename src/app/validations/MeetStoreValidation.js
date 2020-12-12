@@ -4,6 +4,7 @@ import 'dotenv/config';
 
  export default async ( req, res, next ) => {
  	const schema = Yup.object().shape({
+        title: Yup.string().required(),
         localization: Yup.string().required(),
         description: Yup.string().required(),
         date: Yup.string().matches(regexDate).required(),

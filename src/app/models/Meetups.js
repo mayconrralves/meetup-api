@@ -4,6 +4,7 @@ import { format } from 'date-fns';
 class Meetups extends Model{
     static init(sequelize){
         super.init({
+            title: Sequelize.STRING,
             description: Sequelize.STRING,
             localization: Sequelize.STRING,
             date: Sequelize.DATE,

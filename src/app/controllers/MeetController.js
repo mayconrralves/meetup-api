@@ -10,7 +10,7 @@ class MeetController {
         if(isBefore(parseISO(req.body.date), new Date())) {
             return res.status(400).json({error: 'This date has passed'});
         }
-        const { localization, description, date, banner_id } = req.body;
+        const { title, localization, description, date, banner_id } = req.body;
     
         const meet = await Meetups.findOne({
             where: { date: parseISO(date) }
@@ -34,12 +34,12 @@ class MeetController {
         }
         const result = await Meetups.create({
             user_id,
+            title,
             localization,
             description,
             date,
             banner_id
         });
-
         return res.json(result);
     }
 

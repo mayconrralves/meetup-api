@@ -15,6 +15,7 @@ class App {
         this.server = express();
         this.middlewares();
         this.routes();
+        this.server.use('/user/avatar', express.static(path.resolve(__dirname, '..', 'storage', 'uploads')));
         this.exceptionHandler();
     }
 
@@ -28,7 +29,7 @@ class App {
         ));
         this.server.use(cookieParser());
         this.server.use(express.json());
-        this.server.use('/user/avatar', express.static(path.resolve(__dirname, '..', 'storage', 'uploads')));
+        
 
     }
 

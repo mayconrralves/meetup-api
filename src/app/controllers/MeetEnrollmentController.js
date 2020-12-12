@@ -105,7 +105,7 @@ class MeetEnrollmentController{
 			{
 				model: Meetups,
 				as: 'fk_meets',
-				attributes: ['id','user_id', 'description'],
+				attributes: ['id','user_id', 'description', 'title'],
 				include: [
 					{
 						model: User,
@@ -159,7 +159,7 @@ class MeetEnrollmentController{
 				{
 					model: Meetups,
 					as: 'fk_meets',
-					attributes: ['id', 'localization','description', 'date'],
+					attributes: ['id','title', 'localization','description', 'date'],
 					where:{'date': where(fn('date', col('date')),'>=', date)},
 					order: ['date', 'DESC'],
 				}
