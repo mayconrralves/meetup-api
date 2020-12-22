@@ -2,7 +2,7 @@ import User from '../models/User';
 import File from '../models/File';
 
 class UserController{
-    
+ 
    async store(req, res){
 
         const userExists = await User.findOne({
@@ -16,12 +16,11 @@ class UserController{
             });
         }
 
-        const { name, email, password, banner_id } = await User.create( req.body );
+        const { name, email } = await User.create( req.body );
 
         return res.json({
             name,
             email,
-            password,
         });
     }
 
@@ -55,7 +54,6 @@ class UserController{
         });
 
         return res.json({
-            id,
             name,
             email,
             avatar,

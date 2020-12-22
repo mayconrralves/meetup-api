@@ -4,6 +4,17 @@ import User from '../models/User';
 import File from '../models/File';
 import authConfig from '../../config/auth';
 class SessionController {
+
+    async index(req, res) {
+        const id = req.userId;
+
+        const { name, email } = await User.findByPk(id);
+        return res.json({
+            name,
+            email
+        });
+    }
+
     async store(req, res) {
         const { email, password} = req.body;
 

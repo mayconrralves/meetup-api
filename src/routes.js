@@ -29,6 +29,7 @@ routes.use(authAuthorization);
 routes.use(csrfProtection);
 routes.get('/getcsrf', CSRFController.index);
 routes.get('/logout', SessionController.delete);
+routes.get('/user', SessionController.index);
 routes.put('/user/update', userUpdateValidation, UserController.update);
 routes.post('/user/avatar', [ upload.single('file'), fileValidation], FileController.store);
 routes.get('/meets/all', ScheduleController.index);
