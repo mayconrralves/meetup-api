@@ -11,6 +11,11 @@ class ScheduleController{
 			order: ['date'],
 			include: [
 				{
+					model: File,
+                    as: 'banner',
+                    attributes: ['id', 'name', 'path', 'url'],
+				},
+				{
 					model: User,
 					as: 'user_meet',
 					attributes: ['id','name','email'],
