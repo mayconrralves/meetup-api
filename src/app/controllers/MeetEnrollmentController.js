@@ -162,6 +162,13 @@ class MeetEnrollmentController{
 					attributes: ['id','title', 'localization','description', 'date'],
 					where:{'date': where(fn('date', col('date')),'>=', date)},
 					order: ['date', 'DESC'],
+					include: [
+	           			{
+                    		model: File,
+                   			as: 'banner',
+                    		attributes: ['id', 'name', 'path', 'url'],
+                		}
+					]
 				}
 			],
 			limit: limitByPage,
