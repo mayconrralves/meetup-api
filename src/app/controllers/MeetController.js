@@ -1,8 +1,8 @@
 import * as Yup from 'yup';
 import {parseISO, isBefore,isAfter, subHours} from 'date-fns';
+import { Op } from 'sequelize';
 import Meetups from '../models/Meetups';
 import File from '../models/File';
-
 
 class MeetController {
     
@@ -12,8 +12,12 @@ class MeetController {
         }
         const { title, localization, description, date, banner_id } = req.body;
     
+        const user_id = req.userId;
         const meet = await Meetups.findOne({
-            where: { date: parseISO(date) }
+            where: { 
+                date: parseISO(date),
+                user_id
+            }
         });
 
         if(meet){
@@ -21,9 +25,6 @@ class MeetController {
                 error: " Date is not available",
             });
         }
-     
-
-        const user_id = req.userId;
 
         const file = await File.findByPk(banner_id);
         
@@ -53,6 +54,7 @@ class MeetController {
         }
 
         const { id } = req.query;
+        const user_id = req.userId;
         
         const meet = await Meetups.findByPk(id);
 
@@ -61,7 +63,20 @@ class MeetController {
                 error: "Meetup no exists",
             });
         }
-
+        if(req.body.date) {
+            const otherMeetWithSameDate = await Meetups.findOne({
+                where: {
+                    date: parseISO(req.body.date),
+                    user_id,
+                    [Op.not]: { id }
+                }
+            })
+            if(otherMeetWithSameDate){
+                return res.status(400).json({
+                    error: 'Date is not available'
+                });
+            }
+        }
         await meet.update(req.body);
 
         return res.json(meet);
